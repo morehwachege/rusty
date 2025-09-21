@@ -27,3 +27,17 @@ pub async fn users(
         Err(_) => HttpResponse::InternalServerError().finish()
     }
 }
+
+pub async fn get_users(
+    pool: DbPool
+) -> impl Responder{
+    let conn = &mut pool.get().expect("Failed to connect to the database");
+
+    let users = users::table
+        .load::<User>(conn);
+    match users{
+        Ok(users) => HttpResponse::Ok()
+            .json(users),
+        Err(_) => HttpResponse::InternalServerError().finish()
+    }
+}
