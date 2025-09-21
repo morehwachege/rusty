@@ -1,6 +1,7 @@
 // use serde_json::json;
 use actix_web::{ web, HttpResponse, Responder};
 use diesel::prelude::*;
+use uuid::Uuid;
 use crate::{models::user::{User, NewUser}, db::schema::users};
 
 type DbPool = web::Data<diesel::r2d2::Pool<diesel::r2d2::ConnectionManager<PgConnection>>>;
@@ -45,7 +46,7 @@ pub async fn get_users(
 // 
 pub async fn get_user_by_id(
     pool: DbPool,
-    user_id: web::Path<i32>
+    user_id: web::Path<Uuid>
 ) -> impl Responder{
     let conn = &mut pool.get().expect("Failed to connect to the database");
 
@@ -62,7 +63,7 @@ pub async fn get_user_by_id(
 
 pub async fn delete_user(
     pool: DbPool,
-    user_id: web::Path<i32>
+    user_id: web::Path<Uuid>
 ) -> impl Responder{
     let conn = &mut pool.get().expect("Failed to connect to the database");
 
@@ -77,7 +78,7 @@ pub async fn delete_user(
 
 pub async fn update_user(
     pool: DbPool,
-    user_id: web::Path<i32>,
+    user_id: web::Path<Uuid>,
     updated_user: web::Json<NewUser>
 ) -> impl Responder{
     let conn = &mut pool.get().expect("Failed to connect to the database");
